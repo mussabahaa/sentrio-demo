@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Noble Remote Services | 24/7 Security Dispatch & Incident Relay Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --brand-sky: #B0DEF4;
+      --cloud-bg: #EEF7FA;
+      --pure-white: #FFFFFF;
+      --solid-black: #000000;
+      --text-muted: #475569;
+      --border-color: #D2E3ED;
+      --success: #10B981;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      background-color: var(--pure-white);
+      color: var(--solid-black);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Navigation Bar in exact #B0DEF4 Sky Blue */
+    .navbar {
+      background-color: var(--brand-sky);
+      color: var(--solid-black);
+      padding: 14px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #93cbdc;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo-img {
+      height: 38px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .nav-title {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+    }
+
+    /* View Switcher */
+    .view-switcher {
+      display: flex;
+      background-color: var(--pure-white);
+      padding: 4px;
+      border-radius: 99px;
+      gap: 4px;
+      border: 1px solid #93cbdc;
+    }
+
+    .view-btn {
+      background: transparent;
+      border: none;
+      color: var(--solid-black);
+      padding: 8px 16px;
+      border-radius: 99px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .view-btn.active {
+      background-color: var(--solid-black);
+      color: #ffffff;
+    }
+
+    .client-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      background: var(--pure-white);
+      padding: 6px 16px;
+      border-radius: 99px;
+      border: 1px solid #93cbdc;
+      font-weight: 600;
+    }
+
+    .status-dot {
+      width: 9px;
+      height: 9px;
+      background-color: var(--success);
+      border-radius: 50%;
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1200px;
+      width: 100%;
+      margin: 32px auto;
+      padding: 0 20px;
+      flex: 1;
+    }
+
+    .view-section {
+      display: none;
+    }
+
+    .view-section.active {
+      display: block;
+    }
+
+    /* Bento Cards */
+    .card {
+      background: var(--cloud-bg);
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+      padding: 28px;
+      margin-bottom: 24px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--solid-black);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .badge {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 99px;
+      text-transform: uppercase;
+    }
+
+    .badge-live {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .badge-quo {
+      background: #e0f2fe;
+      color: #0369a1;
+    }
+
+    /* Grid Layouts */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 24px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group.full {
+      grid-column: span 2;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--solid-black);
+      margin-bottom: 6px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      font-size: 14px;
+      color: var(--solid-black);
+      background-color: var(--pure-white);
+      transition: border 0.2s;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--solid-black);
+      box-shadow: 0 0 0 3px rgba(176, 222, 244, 0.6);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 85px;
+    }
+
+    /* OpenPhone Call Box */
+    .quo-box {
+      background: var(--pure-white);
+      border: 1px solid var(--border-color);
+      border-left: 4px solid #0284c7;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 18px;
+    }
+
+    .quo-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .quo-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #0369a1;
+    }
+
+    .audio-player {
+      background: var(--cloud-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .play-btn {
+      background: var(--solid-black);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      cursor: pointer;
+      font-size: 11px;
+    }
+
+    .wave-bar {
+      flex: 1;
+      height: 6px;
+      background: #cbd5e1;
+      margin: 0 14px;
+      border-radius: 3px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .wave-progress {
+      width: 65%;
+      height: 100%;
+      background: #0284c7;
+    }
+
+    /* Notification Channels */
+    .channel-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 6px;
+    }
+
+    .channel-pill {
+      flex: 1;
+      border: 1px solid var(--border-color);
+      background: var(--pure-white);
+      padding: 10px 12px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .channel-pill input {
+      width: auto;
+    }
+
+    /* Buttons */
+    .btn-primary {
+      background-color: var(--solid-black);
+      color: #ffffff;
+      border: none;
+      padding: 14px 24px;
+      border-radius: 99px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-primary:hover {
+      background-color: #1e293b;
+    }
+
+    .btn-secondary {
+      background-color: var(--brand-sky);
+      color: var(--solid-black);
+      border: 1px solid #93cbdc;
+      padding: 10px 18px;
+      border-radius: 99px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-secondary:hover {
+      background-color: #93cbdc;
+    }
+
+    /* Preview Phone */
+    .preview-phone {
+      background: var(--solid-black);
+      color: white;
+      border-radius: 16px;
+      padding: 20px;
+      border: 2px solid #334155;
+    }
+
+    .notif-bubble {
+      background: #0f172a;
+      border-left: 4px solid var(--brand-sky);
+      padding: 14px;
+      border-radius: 8px;
+      margin-bottom: 14px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .notif-bubble strong {
+      color: var(--brand-sky);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: var(--cloud-bg);
+      padding: 20px;
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+      border-top: 4px solid var(--brand-sky);
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .stat-value {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--solid-black);
+      margin-top: 6px;
+    }
+
+    .stat-sub {
+      font-size: 12px;
+      color: var(--success);
+      margin-top: 4px;
+      font-weight: 600;
+    }
+
+    /* Table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th {
+      text-align: left;
+      padding: 12px;
+      background: var(--pure-white);
+      color: var(--solid-black);
+      font-weight: 700;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    td {
+      padding: 12px;
+      border-bottom: 1px solid var(--border-color);
+      vertical-align: middle;
+      background: var(--pure-white);
+    }
+
+    /* Login Wrapper */
+    .login-wrapper {
+      max-width: 420px;
+      margin: 40px auto;
+    }
+
+    .success-banner {
+      display: none;
+      background: #dcfce7;
+      border: 1px solid #86efac;
+      color: #166534;
+      padding: 14px;
+      border-radius: 12px;
+      margin-top: 14px;
+      font-size: 13px;
+      font-weight: 600;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Header matching nobleremote.com #B0DEF4 style -->
+  <header class="navbar">
+    <div class="brand">
+      <img src="https://nobleremote.com/logo.png" alt="Noble Remote Services" class="brand-logo-img" onerror="this.style.display='none'">
+      <span class="nav-title">NOBLE REMOTE SERVICES</span>
+    </div>
+
+    <div class="view-switcher">
+      <button class="view-btn active" onclick="switchView('dispatch')">1. Live Dispatch Form</button>
+      <button class="view-btn" onclick="switchView('admin')">2. Sentrio Admin Portal</button>
+      <button class="view-btn" onclick="switchView('login')">3. Client Login</button>
+    </div>
+
+    <div class="client-badge">
+      <div class="status-dot"></div>
+      <span>Client: <strong>Sentrio Security</strong></span>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <!-- VIEW 1: LIVE DISPATCH FORM -->
+    <div id="view-dispatch" class="view-section active">
+      <div class="grid-2">
+        
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">⚡ Live Incident Relay Form</div>
+            <span class="badge badge-live">● 24/7 Dispatcher Active</span>
+          </div>
+
+          <!-- OpenPhone Integration Box -->
+          <div class="quo-box">
+            <div class="quo-header">
+              <span class="quo-title">📞 OpenPhone (Quo) Live Call Connected</span>
+              <span class="badge badge-quo">Auto-Recorded</span>
+            </div>
+            <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">
+              <strong>Caller:</strong> Guard Harman S. (+1 604-555-0192) &nbsp;|&nbsp; <strong>Line:</strong> Sentrio 24/7 Dispatch Line
+            </div>
+            <div class="audio-player">
+              <button class="play-btn">▶</button>
+              <div class="wave-bar"><div class="wave-progress"></div></div>
+              <span>call_rec_20261020_0214.mp3</span>
+            </div>
+            <label style="font-size: 12px;">Auto-Attached Call Script / Transcript:</label>
+            <textarea style="min-height: 60px; font-size: 12px; background: var(--pure-white);">[00:04] Dispatcher: "Noble Remote Dispatch for Sentrio Security, please state your name and site."
+[00:09] Guard Harman: "Vancouver Warehouse #3. Forced entry found at rear bay. Lock damaged. Police called."</textarea>
+          </div>
+
+          <form onsubmit="submitIncident(event)">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Region / Province / State</label>
+                <select>
+                  <option>British Columbia (BC), Canada</option>
+                  <option>Ontario (ON), Canada</option>
+                  <option>Alberta (AB), Canada</option>
+                  <option>United States (Expansion Sites)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Active Site Location</label>
+                <select>
+                  <option>BC - Vancouver Metro Warehouse #4</option>
+                  <option>BC - Surrey Logistics Yard</option>
+                  <option>ON - Toronto Financial Plaza</option>
+                  <option>AB - Calgary Industrial Park</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Reporting Guard Name & Phone</label>
+                <input type="text" value="Harman S. (+1 604-555-0192)" required>
+              </div>
+
+              <div class="form-group">
+                <label>Incident Priority</label>
+                <select>
+                  <option>🔴 HIGH - Break-In / Property Damage</option>
+                  <option>🟠 URGENT - Trespassing / Disturbance</option>
+                  <option>🟡 MEDIUM - Alarm Trigger / Access Issue</option>
+                  <option>🟢 LOW - Shift Check-In / Maintenance</option>
+                </select>
+              </div>
+
+              <div class="form-group full">
+                <label>Incident Summary & Dispatcher Notes</label>
+                <textarea>Guard called via OpenPhone line at 02:14 AM reporting damaged lock at Rear Bay #3. Guard secured perimeter and contacted local police (File #VA-8821). Relaying report with audio and script immediately.</textarea>
+              </div>
+
+              <div class="form-group full">
+                <label>Assigned Management Contact</label>
+                <select>
+                  <option>Awais G. (Management) — +1 (778) 865-7126 | info@sentriosecurity.com</option>
+                </select>
+              </div>
+
+              <div class="form-group full">
+                <label>Instant Relay Channels</label>
+                <div class="channel-group">
+                  <label class="channel-pill"><input type="checkbox" checked> 💬 WhatsApp Alert</label>
+                  <label class="channel-pill"><input type="checkbox" checked> 📱 SMS Text Message</label>
+                  <label class="channel-pill"><input type="checkbox" checked> ✉️ Email + Audio File</label>
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-primary" style="margin-top: 10px;">
+              🚀 Submit Incident & Send Instant Alerts
+            </button>
+
+            <div id="submitBanner" class="success-banner">
+              ✅ Incident Logged! Instant Alert + Call Recording & Transcript sent to Awais G. (+1 778-865-7126 & info@sentriosecurity.com).
+            </div>
+          </form>
+        </div>
+
+        <!-- Right Column: Alert Preview -->
+        <div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">📲 Instant Alert Preview</div>
+              <span class="badge badge-live">Delivered in 2 Sec</span>
+            </div>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
+              When submitted, Sentrio management instantly receives this structured notice on WhatsApp, SMS, and Email:
+            </p>
+
+            <div class="preview-phone">
+              <div style="font-size: 11px; color: #94a3b8; margin-bottom: 10px; display:flex; justify-content:space-between;">
+                <span>WHATSAPP / SMS ALERT</span>
+                <span>Just Now</span>
+              </div>
+
+              <div class="notif-bubble">
+                <strong>🚨 SENTRIO SECURITY - INCIDENT ALERT</strong>
+                <b>Priority:</b> 🔴 HIGH - Break-In / Damage<br>
+                <b>Site:</b> Vancouver Warehouse #4<br>
+                <b>Guard:</b> Harman S. (+1 604-555-0192)<br><br>
+                <b>Summary:</b> Broken lock at Rear Bay #3. Area secured, police notified.<br><br>
+                <b>🎧 Call Audio & Script:</b> <span style="color:#B0DEF4;">nobleremote.com/portal/rec-1049</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- VIEW 2: SENTRIO ADMIN PORTAL (RESTORED ALL FEATURES) -->
+    <div id="view-admin" class="view-section">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total Incidents (Month)</div>
+          <div class="stat-value">42</div>
+          <div class="stat-sub">Avg ~10.5 Calls / Week</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Avg Answer Speed</div>
+          <div class="stat-value">4 Sec</div>
+          <div class="stat-sub">100% Answer Rate</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Active Regions</div>
+          <div class="stat-value">BC, ON, AB</div>
+          <div class="stat-sub">US Ready</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Monthly Auto-Report</div>
+          <div class="stat-value">Active</div>
+          <div class="stat-sub">Sent 1st of Month</div>
+        </div>
+      </div>
+
+      <!-- Incident Logs & Date Filter & PDF Export -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📊 Incident Logs & Custom PDF Report Generator</div>
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <input type="date" value="2026-10-01" style="width: 135px; padding: 6px 10px; font-size: 12px;">
+            <span style="font-size: 12px; font-weight: 600;">to</span>
+            <input type="date" value="2026-10-20" style="width: 135px; padding: 6px 10px; font-size: 12px;">
+            <button class="btn-secondary" onclick="alert('Generating Consolidated PDF Report for Sentrio Security...')">
+              📥 Download PDF
+            </button>
+          </div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Report ID</th>
+              <th>Date & Time</th>
+              <th>Site</th>
+              <th>Guard</th>
+              <th>Incident Type</th>
+              <th>Call Recording & Script</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>#SR-1049</strong></td>
+              <td>Oct 20, 02:14 AM</td>
+              <td>BC - Vancouver Warehouse #4</td>
+              <td>Harman S.</td>
+              <td>🔴 Break-In</td>
+              <td><a href="#" style="color:#0284c7; font-weight:600;">▶ Listen Audio + Script</a></td>
+              <td><span class="badge badge-live">Sent (WA/SMS/Email)</span></td>
+            </tr>
+            <tr>
+              <td><strong>#SR-1048</strong></td>
+              <td>Oct 19, 11:40 PM</td>
+              <td>ON - Toronto Financial Plaza</td>
+              <td>David K.</td>
+              <td>🟠 Trespassing</td>
+              <td><a href="#" style="color:#0284c7; font-weight:600;">▶ Listen Audio + Script</a></td>
+              <td><span class="badge badge-live">Sent (WA/SMS/Email)</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- RESTORED: Manage Sites & Customize Fields -->
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">🏢 Manage Sites & Locations (Canada & US)</div>
+          </div>
+          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">
+            Sentrio Admins can add or update active sites in BC, Ontario, Alberta, or new U.S. states anytime. Changes appear instantly on dispatchers' screens.
+          </p>
+          <div style="display:flex; gap:10px; margin-bottom: 12px;">
+            <input type="text" placeholder="Add new site (e.g., Seattle Commercial Center - WA)">
+            <button class="btn-secondary" style="white-space:nowrap;">+ Add Site</button>
+          </div>
+          <div style="font-size:12px; color:var(--solid-black); background:var(--pure-white); padding:12px; border-radius:8px; border:1px solid var(--border-color);">
+            ✓ BC - Vancouver Warehouse #4 &nbsp;|&nbsp; ✓ ON - Toronto Financial Plaza &nbsp;|&nbsp; ✓ AB - Calgary Industrial Park
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">⚙️ Customize Form Fields & Alert Contacts</div>
+          </div>
+          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">
+            Add custom fields for guards to report (e.g., Police File #, License Plate) and manage who receives instant alerts per site.
+          </p>
+          <div style="display:flex; gap:10px; margin-bottom: 12px;">
+            <input type="text" placeholder="Add custom field (e.g., Police Incident #)">
+            <button class="btn-secondary" style="white-space:nowrap;">+ Add Field</button>
+          </div>
+          <div style="font-size:12px; color:var(--solid-black); background:var(--pure-white); padding:12px; border-radius:8px; border:1px solid var(--border-color);">
+            <strong>Primary Alert Contact:</strong> Awais G. (+1 778-865-7126 | info@sentriosecurity.com)
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- VIEW 3: CLIENT LOGIN (WITH NOBLE REMOTE LOGO) -->
+    <div id="view-login" class="view-section">
+      <div class="login-wrapper">
+        <div class="card" style="padding: 32px;">
+          <div style="text-align: center; margin-bottom: 24px;">
+            <div style="margin: 0 auto 12px auto; width: 56px; height: 56px; background: #020617; color: #B0DEF4; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 22px; border: 2px solid #B0DEF4;">NR</div>
+            <h2 style="font-size: 20px; color: var(--solid-black); font-weight: 800;">Noble Remote Services</h2>
+            <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">Secure 24/7 Incident Reporting Portal</p>
+          </div>
+
+          <div class="form-group">
+            <label>Client Admin Email</label>
+            <input type="email" value="info@sentriosecurity.com">
+          </div>
+
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" value="••••••••••••">
+          </div>
+
+          <button class="btn-primary" onclick="switchView('admin')" style="margin-top: 10px;">
+            🔐 Sign In to Secure Workspace
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function switchView(viewName) {
+      document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.view-btn').forEach(el => el.classList.remove('active'));
+
+      if (viewName === 'dispatch') {
+        document.getElementById('view-dispatch').classList.add('active');
+        document.querySelectorAll('.view-btn')[0].classList.add('active');
+      } else if (viewName === 'admin') {
+        document.getElementById('view-admin').classList.add('active');
+        document.querySelectorAll('.view-btn')[1].classList.add('active');
+      } else if (viewName === 'login') {
+        document.getElementById('view-login').classList.add('active');
+        document.querySelectorAll('.view-btn')[2].classList.add('active');
+      }
+    }
+
+    function submitIncident(e) {
+      e.preventDefault();
+      document.getElementById('submitBanner').style.display = 'block';
+    }
+  </script>
+</body>
+</html>

@@ -1,1 +1,0 @@
-# sentrio-demo
